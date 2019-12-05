@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Globalization;
 
 namespace APDI
 {
@@ -14,7 +15,7 @@ namespace APDI
         string connectionString = @"Server=localhost; Database=faceid; Uid=root; Pwd=10515003;";
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (!IsPostBack) //判斷Page是否第一次執行，只在第一次執行
             {
                 Clear();
                 GridFill();
@@ -28,15 +29,17 @@ namespace APDI
                 using (MySqlConnection sqlCon = new MySqlConnection(connectionString))
                 {
                     sqlCon.Open();
+                    
                     MySqlCommand sqlCmd = new MySqlCommand("EventAddOrEdit",sqlCon);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sqlCmd.Parameters.AddWithValue("_eve_num", Convert.ToInt32(hfevenum.Value == "" ? "0" : hfevenum.Value));
-                    sqlCmd.Parameters.AddWithValue("_id", txtid.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("_byid", txtbyid.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("_eve_time", txttime.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("_eve_local", txtlocal.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("_eve_desc", txtdesc.Text.Trim());
-                    sqlCmd.ExecuteNonQuery();
+                    sqlCmd.Parameters.AddWithValue("_id", txtid.Text);
+                    sqlCmd.Parameters.AddWithValue("_byid", txtbyid.Text);
+                    sqlCmd.Parameters.AddWithValue("_eve_time", txttime.Text);
+                    //sqlCmd.Parameters.AddWithValue("_eve_time", Convert.ToString("yyyy/MM/dd"));
+                    sqlCmd.Parameters.AddWithValue("_eve_local", txtlocal.Text);
+                    sqlCmd.Parameters.AddWithValue("_eve_desc", txtdesc.Text);
+                    sqlCmd.ExecuteNonQuery();   //不會返回任何資料庫的資料, 它只會返回整數值來表示成功或受影響的資料列數目
                     GridFill();
                     Clear();
                     lblSuccessMessage.Text = "保存成功";
@@ -48,7 +51,7 @@ namespace APDI
             }
         }
 
-        void Clear()
+        void Clear()   //把畫面清空
         {
             hfevenum.Value = "";
             txtid.Text = txtbyid.Text = txttime.Text =txtlocal.Text = txtdesc.Text = "";
@@ -79,6 +82,8 @@ namespace APDI
         protected void lnkSelect_OnClick(object sender, EventArgs e)
         {
             int eve_num = Convert.ToInt32((sender as LinkButton).CommandArgument);
+            //txttime.Text = ;
+            //string 
             using (MySqlConnection sqlCon = new MySqlConnection(connectionString))
             {
                 sqlCon.Open();
@@ -87,17 +92,24 @@ namespace APDI
                 sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
                 DataTable dtbl = new DataTable();
                 sqlDa.Fill(dtbl);
+                
 
                 txtid.Text = dtbl.Rows[0][1].ToString();
                 txtbyid.Text = dtbl.Rows[0][2].ToString();
-                txttime.Text = dtbl.Rows[0][3].ToString();
+            
+                string a = dtbl.Rows[0][3].ToString();
+
+                //string[] sArray = a.Split(:);
+                txttime.Text = a ;
                 txtlocal.Text = dtbl.Rows[0][4].ToString();
                 txtdesc.Text = dtbl.Rows[0][5].ToString();
+                
 
                 hfevenum.Value = dtbl.Rows[0][0].ToString();
 
                 btnSave.Text = "Update";
                 btnDelete.Enabled = true;
+ 
             }
         }
 

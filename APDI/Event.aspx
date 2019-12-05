@@ -98,7 +98,7 @@
                 <Columns>
                     <asp:BoundField DataField="id" HeaderText="被通知人" />
                     <asp:BoundField DataField="byid" HeaderText="通知人" />
-                    <asp:BoundField DataField="eve_time" HeaderText="事件時間" />
+                    <asp:BoundField DataField="eve_time" HeaderText="事件時間" DataFormatString="{0:yyyy-MM-dd}" />
                     <asp:BoundField DataField="eve_local" HeaderText="事件地點" />
                     <asp:BoundField DataField="eve_desc" HeaderText="通知事項" />
                     <asp:TemplateField>
@@ -110,5 +110,7 @@
             </asp:GridView>
         </div>
     </form>
+    <p>
+        &nbsp;</p>
 </body>
 </html>
