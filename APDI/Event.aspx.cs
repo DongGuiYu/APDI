@@ -107,7 +107,7 @@ namespace APDI
 
                 hfevenum.Value = dtbl.Rows[0][0].ToString();
 
-                btnSave.Text = "Update";
+                btnSave.Text = "更新";
                 btnDelete.Enabled = true;
  
             }
