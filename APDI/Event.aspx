@@ -47,7 +47,7 @@
                         <asp:Label Text="事件地點" runat="server" />
                     </td>
                     <td colspan="2">
-                        <asp:TextBox ID="txtlocal" runat="server" ForeColor="#6699FF" Font-Size="Large" />
+                        <asp:TextBox ID="txtlocl" runat="server" ForeColor="#6699FF" Font-Size="Large" />
                     </td>
                 </tr>
                 <tr>
@@ -104,8 +104,8 @@
                 <Columns>
                     <asp:BoundField DataField="id" HeaderText="被通知人" />
                     <asp:BoundField DataField="byid" HeaderText="通知人" />
-                    <asp:BoundField DataField="eve_time" HeaderText="事件時間" DataFormatString="{0:yyyy-MM-dd}" />
-                    <asp:BoundField DataField="eve_local" HeaderText="事件地點" />
+                    <asp:BoundField DataField="eve_time" HeaderText="事件時間" DataFormatString="{0:yyyy-MM-dd}" /> 
+                    <asp:BoundField DataField="eve_locl" HeaderText="事件地點" />
                     <asp:BoundField DataField="eve_desc" HeaderText="通知事項" />
                     <asp:TemplateField>
                         <ItemTemplate>
@@ -115,8 +115,11 @@
                 </Columns>
             </asp:GridView>
         </div>
-    </form>
     <p>
-        &nbsp;</p>
-</body>
+         <asp:Label ID="lbdate" runat="server" Text="Label" Visible="False"></asp:Label>
+            <asp:Label ID="lbnum" runat="server" Text="Label" Visible="False"></asp:Label>
+            <asp:Label ID="lbuser" runat="server" Text="Label" Visible="False"></asp:Label>
+        </p>
+    </form>
+    </body>
 </html>

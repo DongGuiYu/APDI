@@ -12,9 +12,13 @@ namespace APDI
 {
     public partial class Event : System.Web.UI.Page
     {
-        string connectionString = @"Server=localhost; Database=faceid; Uid=root; Pwd=10515003;";
+        string connectionString = @"Server=localhost; Database=faceid; Uid=root; Pwd=10515003; ";
         protected void Page_Load(object sender, EventArgs e)
         {
+            //lbdate.Text = DateTime.Now.ToString("yyyy/MM/dd");
+            //DvEvent.HeaderText = "Hi，" +  + "<br>你的通知訊息";
+            //this.lbuser.Text = Request.QueryString["_id"];
+
             if (!IsPostBack) //判斷Page是否第一次執行，只在第一次執行
             {
                 Clear();
@@ -29,7 +33,11 @@ namespace APDI
                 using (MySqlConnection sqlCon = new MySqlConnection(connectionString))
                 {
                     sqlCon.Open();
-                    
+
+                    //Session.CodePage = 65001;
+                    //Response.Charset = "UTF8";
+                    //Request.ContentEncoding = System.Text.Encoding.UTF8;    //請求編碼
+                    //Response.ContentEncoding = System.Text.Encoding.UTF8;   //響應編碼
                     MySqlCommand sqlCmd = new MySqlCommand("EventAddOrEdit",sqlCon);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sqlCmd.Parameters.AddWithValue("_eve_num", Convert.ToInt32(hfevenum.Value == "" ? "0" : hfevenum.Value));
@@ -37,7 +45,7 @@ namespace APDI
                     sqlCmd.Parameters.AddWithValue("_byid", txtbyid.Text);
                     sqlCmd.Parameters.AddWithValue("_eve_time", txttime.Text);
                     //sqlCmd.Parameters.AddWithValue("_eve_time", Convert.ToString("yyyy/MM/dd"));
-                    sqlCmd.Parameters.AddWithValue("_eve_local", txtlocal.Text);
+                    sqlCmd.Parameters.AddWithValue("_eve_locl", txtlocl.Text);
                     sqlCmd.Parameters.AddWithValue("_eve_desc", txtdesc.Text);
                     sqlCmd.ExecuteNonQuery();   //不會返回任何資料庫的資料, 它只會返回整數值來表示成功或受影響的資料列數目
                     GridFill();
@@ -54,7 +62,7 @@ namespace APDI
         void Clear()   //把畫面清空
         {
             hfevenum.Value = "";
-            txtid.Text = txtbyid.Text = txttime.Text =txtlocal.Text = txtdesc.Text = "";
+            txtid.Text = txtbyid.Text = txttime.Text =txtlocl.Text = txtdesc.Text = "";
             btnSave.Text = "保存";
             btnDelete.Enabled = false;
             lblErrorMessage.Text = lblSuccessMessage.Text = "";
@@ -70,8 +78,11 @@ namespace APDI
             using (MySqlConnection sqlCon = new MySqlConnection(connectionString))
             {
                 sqlCon.Open();
-                MySqlDataAdapter sqlDa = new MySqlDataAdapter("EventViewAll", sqlCon);
-                sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+                MySqlDataAdapter sqlDa = new MySqlDataAdapter();
+                MySqlCommand sqlCmd = new MySqlCommand("EventViewAll", sqlCon);
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+                //sqlCmd.Parameters.AddWithValue("_eve_time", Convert.ToString("yyyy/MM/dd"));
+                sqlDa.SelectCommand = sqlCmd;
                 DataTable dtbl = new DataTable();
                 sqlDa.Fill(dtbl);
                 gvEvent.DataSource = dtbl;
@@ -92,19 +103,17 @@ namespace APDI
                 sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
                 DataTable dtbl = new DataTable();
                 sqlDa.Fill(dtbl);
-                
 
+                
                 txtid.Text = dtbl.Rows[0][1].ToString();
                 txtbyid.Text = dtbl.Rows[0][2].ToString();
-            
                 string a = dtbl.Rows[0][3].ToString();
-
+                int start = 1, length = 10;
+                //string result = a.Trim();
                 //string[] sArray = a.Split(:);
-                txttime.Text = a ;
-                txtlocal.Text = dtbl.Rows[0][4].ToString();
+                txttime.Text = a.Substring(start-1,length);
+                txtlocl.Text = dtbl.Rows[0][4].ToString();
                 txtdesc.Text = dtbl.Rows[0][5].ToString();
-                
-
                 hfevenum.Value = dtbl.Rows[0][0].ToString();
 
                 btnSave.Text = "更新";

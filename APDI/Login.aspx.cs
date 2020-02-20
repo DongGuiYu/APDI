@@ -31,15 +31,18 @@ namespace APDI
                 switch (ddlst.SelectedItem.Value)
                 {
                     case "s":
-                        string query = "SELECT COUNT(1) FROM std_id WHERE id=@id AND passwd=@passwd";
-                        MySqlCommand sqlCmd = new MySqlCommand(query, sqlCon);
+                        string query_s = "SELECT COUNT(1) FROM std_id WHERE id=@id AND passwd=@passwd";
+                        MySqlCommand sqlCmd = new MySqlCommand(query_s, sqlCon);
                         sqlCmd.Parameters.AddWithValue("@id", txtuserid.Text.Trim());
                         sqlCmd.Parameters.AddWithValue("@passwd", txtpasswd.Text.Trim());
                         int count = Convert.ToInt32(sqlCmd.ExecuteScalar());
                         if (count == 1)
                         {
-                            Context.Items["id"] = txtuserid.Text;   //如果是學生，頁面轉向student.aspx
-                            Server.Transfer("student.aspx", true);
+                            //Context.Items["id"] = txtuserid.Text;   //如果是學生，頁面轉向student.aspx
+                            //Response.Redirect("student.aspx", true);
+                            //Session["_id"] = txtuserid.Text;
+                            //Response.Redirect("student.aspx");
+                            Response.Redirect("student.aspx?_id=" + this.txtuserid.Text);
                         }
                         else
                         {
@@ -55,7 +58,7 @@ namespace APDI
                         int count_t = Convert.ToInt32(sqlCmd_t.ExecuteScalar());
                         if (count_t == 1)
                         {
-                            Session["id"] = txtuserid.Text;   //如果是老師，頁面轉向Event.aspx
+                            Session["_id"] = txtuserid.Text;   //如果是老師，頁面轉向Event.aspx
                             Response.Redirect("Event.aspx");
                         }
                         else
